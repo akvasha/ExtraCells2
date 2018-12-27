@@ -19,6 +19,7 @@ buildscript {
 apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'idea'
+apply plugin: 'maven'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -54,9 +55,13 @@ minecraft {
 
 repositories {
     maven {
+        name 'CurseForge'
+        url "https://minecraft.curseforge.com/api/maven/"
+    }
+    /*maven {
         name 'Mobius Repo'
         url "http://mobiusstrip.eu/maven"
-    }
+    }*/
     maven {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
@@ -69,7 +74,12 @@ repositories {
 	
 	maven {
         name = 'IGW'
-        url = "http://maven.k-4u.nl/"
+        url = "http://modmaven.k-4u.nl/"
+    }
+
+    maven {
+        name = 'gt'
+        url = "https://gregtech.overminddl1.com/"
     }
 
     ivy {
@@ -77,17 +87,19 @@ repositories {
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
 	
-	ivy { 
+	/*ivy {
 		name 'WirelessCraftingTerminal' 
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
-	} 
+	}*/
+    
+    //file needs to be placed in ...\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.4.1614-1.7.10\ manually
 
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+	/*compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
         transitive = false
-	}
+	}*/
 	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
         transitive = false
 	}
@@ -99,6 +111,7 @@ dependencies {
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 	compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
+    //compile "wireless-crafting-terminal:WirelessCraftingTerminal-${config.version.minecraft}:${config.version.wc}"
 
     compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
 	
@@ -132,6 +145,27 @@ task deobfJar(type: Jar) {
 
 artifacts {
     archives deobfJar
+}
+
+if (System.getenv("CURSEFORGE_API_KEY") != null) {
+    curseforge {
+        apiKey = System.getenv("CURSEFORGE_API_KEY")
+        project {
+            id = config.cf.project.id
+            addGameVersion config.version.minecraft
+            changelog = file('changelog.txt')
+            releaseType = config.cf.project.type
+            relations {
+                requiredLibrary 'applied-energistics-2'
+            }
+            addArtifact(apiJar) {
+                releaseType = 'alpha'
+            }
+            mainArtifact(jar) {
+                displayName = "$archivesBaseName-${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+            }
+        }
+    }
 }
 
 def getBuildNumber() {
