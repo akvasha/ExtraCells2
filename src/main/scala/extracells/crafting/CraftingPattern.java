@@ -6,13 +6,20 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import extracells.api.crafting.IFluidCraftingPatternDetails;
 import extracells.registries.ItemEnum;
+import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class CraftingPattern implements IFluidCraftingPatternDetails,
 		Comparable<CraftingPattern> {
@@ -89,6 +96,16 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public ItemStack getOutput(InventoryCrafting craftingInv, World world) {
+		try {
+			String filePath = "C:\\kek\\kekos.txt";
+			FileWriter writer = new FileWriter(filePath, true);
+			BufferedWriter bufferWriter = new BufferedWriter(writer);
+			bufferWriter.write("i started to craft\n");
+			bufferWriter.close();
+		}
+		catch (IOException e) {
+			System.out.println(e);
+		}
 		IAEItemStack[] input = this.pattern.getInputs();
 		for (int i = 0; i < input.length; i++) {
 			IAEItemStack stack = input[i];
@@ -118,6 +135,20 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 					&& stack.getItem() instanceof IFluidContainerItem) {
 				craftingInv.setInventorySlotContents(i, null);
 			}
+		}
+		try {
+			String filePath = "C:\\kek\\kekos.txt";
+			FileWriter writer = new FileWriter(filePath, true);
+			BufferedWriter bufferWriter = new BufferedWriter(writer);
+			bufferWriter.write("output in crafting pattern 1\n");
+			String craft_name = returnStack.getDisplayName();
+			String craft_name2 = returnStack.toString();
+			bufferWriter.write(craft_name + "\n");
+			bufferWriter.write(craft_name2 + "\n");
+			bufferWriter.close();
+		}
+		catch (IOException e) {
+			System.out.println(e);
 		}
 		return returnStack;
 	}
