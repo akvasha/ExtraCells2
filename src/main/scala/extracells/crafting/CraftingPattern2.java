@@ -97,14 +97,18 @@ public class CraftingPattern2 extends CraftingPattern {
 	@Override
 	public IAEItemStack[] getOutputs() {
 		try {
-			String filePath = "C:\\kek\\kekos.txt";
+			String filePath = "C:\\kek\\kekos_extra.txt";
 			FileWriter writer = new FileWriter(filePath, true);
 			BufferedWriter bufferWriter = new BufferedWriter(writer);
 			bufferWriter.write("i started crafting\n");
 			IAEItemStack[] out = super.getOutputs();
+			for (int i = 0; i < out.length; ++i) {
+				bufferWriter.write(out[i].toString() + "\n");
+			}
 			getCondensedInputs();
 			if (!this.needExtra) {
 				bufferWriter.write("case 1\n");
+				bufferWriter.close();
 				return out;
 			}
 			if (out.length == 0) {
@@ -124,6 +128,7 @@ public class CraftingPattern2 extends CraftingPattern {
 								.createItemStack(
 										new ItemStack(ItemEnum.FLUIDPATTERN
 												.getItem()));
+						bufferWriter.close();
 						return out;
 					}
 				}
@@ -137,6 +142,7 @@ public class CraftingPattern2 extends CraftingPattern {
 						.createItemStack(
 								new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 				bufferWriter.write("case 3\n");
+				bufferWriter.close();
 				return s2;
 			}
 			bufferWriter.write("output in crafting pattern 2\n");

@@ -97,7 +97,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 	@Override
 	public ItemStack getOutput(InventoryCrafting craftingInv, World world) {
 		try {
-			String filePath = "C:\\kek\\kekos.txt";
+			String filePath = "C:\\kek\\kekos_extra.txt";
 			FileWriter writer = new FileWriter(filePath, true);
 			BufferedWriter bufferWriter = new BufferedWriter(writer);
 			bufferWriter.write("i started to craft\n");
@@ -137,7 +137,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 			}
 		}
 		try {
-			String filePath = "C:\\kek\\kekos.txt";
+			String filePath = "C:\\kek\\kekos_extra.txt";
 			FileWriter writer = new FileWriter(filePath, true);
 			BufferedWriter bufferWriter = new BufferedWriter(writer);
 			bufferWriter.write("output in crafting pattern 1\n");
@@ -155,6 +155,17 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public IAEItemStack[] getOutputs() {
+		try {
+			String filePath = "C:\\kek\\kekos_extra2.txt";
+			FileWriter writer = new FileWriter(filePath, true);
+			BufferedWriter bufferWriter = new BufferedWriter(writer);
+			bufferWriter.write("i jumped here\n");
+			bufferWriter.write(this.pattern.toString() + "\n");
+			bufferWriter.write(this.pattern.getClass().toString() + "\n");
+			bufferWriter.close();
+		} catch (IOException e) {
+			System.out.println(e);
+		}
 		return this.pattern.getOutputs();
 	}
 
